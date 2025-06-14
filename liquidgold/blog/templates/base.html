@@ -4,7 +4,8 @@
 <head>
     <meta charset="utf-8">
     <title>LG Extracts</title>
-    <link rel="stylesheet" href="{% static 'blog/styles.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.6/dist/lux/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
     
@@ -21,7 +22,7 @@
             <a class="nav-link active" aria-current="page" href="{% url "blog_index" %}">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
+            <a class="nav-link" href="{% url 'product_list' %}">Shop</a>
           </li>
 
         <!--  
