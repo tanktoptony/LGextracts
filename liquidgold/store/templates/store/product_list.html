@@ -10,6 +10,9 @@
         <ul>
         {% for product in products %}
             <li>
+                {{ product.image }}
+            </li>
+            <li>
             <a href="{% url 'product_detail' product.slug %}">{{ product.name }}</a>
             </li>
         {% endfor %}
