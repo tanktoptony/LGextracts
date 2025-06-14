@@ -1,0 +1,17 @@
+<!-- blog/templates/blog/index.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}
+    <h2>Blog Posts</h2>
+{% endblock page_title %}
+
+{% block page_content %}
+    <h1>Products</h1>
+        <ul>
+        {% for product in products %}
+            <li>
+            <a href="{% url 'product_detail' product.slug %}">{{ product.name }}</a>
+            </li>
+        {% endfor %}
+        </ul>
+{% endblock page_content %}
