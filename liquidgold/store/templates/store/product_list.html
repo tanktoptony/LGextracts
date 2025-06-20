@@ -6,10 +6,25 @@
 {% endblock page_title %}
 
 {% block page_content %}
+
 <div class="container py-5">
   <h2 class="text-center mb-4">Our Products</h2>
 
-  <!-- Filter/Search Form -->
+  <div class="mb-4 text-center">
+    <a href="?category=all{% if query %}&q={{ query }}{% endif %}" 
+       class="btn btn-sm me-2 mb-2 {% if selected_category == 'all' or not selected_category %}btn-primary{% else %}btn-outline-primary{% endif %}">
+      All
+    </a>
+    {% for category in categories %}
+      <a href="?category={{ category.id }}{% if query %}&q={{ query }}{% endif %}" 
+         class="btn btn-sm me-2 mb-2 {% if selected_category == category.id|stringformat:'s' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+        {{ category.name }}
+      </a>
+    {% endfor %}
+  </div>
+  
+
+   Filter/Search Form 
   <form method="get" class="row g-3 mb-4">
     <div class="col-md-4">
       <input type="text" name="q" placeholder="Search..." class="form-control"
@@ -19,16 +34,17 @@
       <select name="category" class="form-select">
         <option value="all">All Categories</option>
         {% for category in categories %}
-          <option value="{{ category.name }}"
-            {% if selected_category == category.name|stringformat:"s" %}selected{% endif %}>
+          <option value="{{ category.id }}"
+            {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>
             {{ category.name }}
           </option>
         {% endfor %}
       </select>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 d-flex gap-2">
       <button type="submit" class="btn btn-primary w-100">Filter</button>
-    </div>
+      <a href="{% url 'product_menu' %}" class="btn btn-outline-secondary w-100">Clear</a>
+    </div>    
   </form>
 
     <div class="container mt-5">
