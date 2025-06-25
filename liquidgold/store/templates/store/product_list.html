@@ -47,6 +47,9 @@
     </div>    
   </form>
 
+  <a href="{% url 'view_order' %}">View Cart</a>
+
+
     <div class="container mt-5">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
             {% for product in products %}
@@ -61,7 +64,11 @@
                 </div>
                 <div class="card-footer d-flex justify-content-between align-items-center">
                   <span class="text-primary fw-bold">${{ product.price }}</span>
-                  <a href="#" class="btn btn-sm btn-outline-primary">Add to Cart</a>
+                  <form method="post" action="{% url 'add_to_order' product.id %}" class="add-to-cart">
+                    {% csrf_token %}
+                    <button type="submit">Add to Cart</button>
+                  </form>
+                  
                 </div>
               </div>
             </div>

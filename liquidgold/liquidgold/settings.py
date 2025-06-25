@@ -51,6 +51,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# settings.py
+STRIPE_SECRET_KEY = "sk_live_dXVjvCS4U2gDxuqdlymBI2Bn"
+STRIPE_PUBLISHABLE_KEY = "pk_live_YERvqWKSYcjk5IM4xqyLlvYi"
+
+
 ROOT_URLCONF = 'liquidgold.urls'
 
 TEMPLATES = [
