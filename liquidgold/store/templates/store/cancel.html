@@ -1,4 +1,12 @@
 <!-- templates/store/cancel.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}
+    <h2>Shop</h2>
+{% endblock page_title %}
+
+{% block page_content %}
 <h1>Payment Cancelled</h1>
 <p>You cancelled the checkout process.</p>
 <a href="{% url 'view_order' %}">Return to your order</a>
+{% endblock %}
