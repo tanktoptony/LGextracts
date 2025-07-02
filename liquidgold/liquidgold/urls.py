@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from store.views import register
+from store.views import register, spanish, lottery, warnings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,6 +25,9 @@ urlpatterns = [
     path('store/', include('store.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('register/', register, name='register'),
+    path('spanish/', spanish, name='spanish'),
+    path('lottery/', lottery, name='lottery'),
+    path('warnings/', warnings, name='warnings'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

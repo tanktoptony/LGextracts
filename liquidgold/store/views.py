@@ -106,3 +106,12 @@ def success(request):
 
 def cancel(request):
     return render(request, 'store/cancel.html')
+
+def spanish(request):
+    return render(request, 'spanish.html')
+
+def lottery(request):
+    return render(request, 'lottery.html')
+
+def warnings(request):
+    return render(request, 'warnings.html')

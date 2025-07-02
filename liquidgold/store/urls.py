@@ -12,6 +12,7 @@ urlpatterns = [
     path('create-checkout-session/', views.create_checkout_session, name='create_checkout_session'),
     path('success/', views.success, name='success'),
     path('cancel/', views.cancel, name='cancel'),
+    ### path('spanish/', views.spanish, name='spanish'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
