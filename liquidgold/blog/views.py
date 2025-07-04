@@ -1,5 +1,6 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from blog.models import Post, Comment
 from blog.forms import CommentForm
 
@@ -43,3 +44,10 @@ def blog_detail(request, pk):
     }
 
     return render(request, "blog/detail.html", context)
+
+def subscribe(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        # You could save it to a model or send to a 3rd-party API like Mailchimp
+        messages.success(request, "Thanks for subscribing!")
+    return redirect(request.META.get('HTTP_REFERER', '/'))

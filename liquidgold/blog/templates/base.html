@@ -12,14 +12,16 @@
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{% url "blog_index" %}">Liquid Gold Extracts</a>
+      <a class="navbar-brand" href="{% url "blog_index" %}"><img src="{% static '/images/image0.avif' %}" 
+        class="img-fluid rounded"
+       style="width: 150px; height: 150px; object-fit: cover;"></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url "blog_index" %}">Home</a>
+            <a class="nav-link active" aria-current="page" href="{% url "blog_index" %}">Articles</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'product_menu' %}">Shop</a>
@@ -57,6 +59,14 @@
   </nav>
   
 <hr>
+
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
 {% block page_title %}{% endblock page_title %}
 {% block page_content %}{% endblock page_content %}
 
@@ -78,7 +88,7 @@
                       <li><a href="#!" class="text-white">About</a></li>
                       <li><a href="#!" class="text-white">Contact Us</a></li>
                       <li><a href="{% url "spanish" %}" class="text-white">Spanish</a></li>
-                      <li><a href="#!" class="text-white">Warnings</a></li>
+                      <li><a href="{% url "warnings" %}" class="text-white">Warnings</a></li>
                   </ul>
               </div>
           </div>
