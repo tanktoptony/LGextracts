@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from store.views import register, spanish, lottery, warnings
+from store.views import register, spanish, lottery, warnings, create_checkout_session, success, cancel
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,6 +28,10 @@ urlpatterns = [
     path('spanish/', spanish, name='spanish'),
     path('lottery/', lottery, name='lottery'),
     path('warnings/', warnings, name='warnings'),
+    path('create-checkout-session/', create_checkout_session, name='create_checkout_session'),
+    path('success/', success, name='success'),
+    path('cancel/', cancel, name='cancel'),
+    
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

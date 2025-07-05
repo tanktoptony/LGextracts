@@ -1,11 +1,21 @@
 <!--  blog/templates/lottery.html -->
 
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block page_title %}
-    <h2>Lottery</h2>
-    <br/>
+  <h2 class="text-center mt-4">🎟️ Scratch & Win</h2>
 {% endblock page_title %}
 
 {% block page_content %}
-<p>This is the lottery page</p>
+<div class="container text-center my-5">
+  {% if win %}
+    <h3 class="text-success">🎉 Congratulations! You won!</h3>
+    <p>Use the code below at checkout to claim your free item:</p>
+    <div class="fs-4 fw-bold text-primary my-3">{{ code }}</div>
+  {% else %}
+    <h3 class="text-danger">🙁 Sorry, no win this time.</h3>
+    <p>But you're still lucky for trying! Come back tomorrow.</p>
+  {% endif %}
+  <a href="{% url 'product_menu' %}" class="btn btn-outline-primary mt-4">Go to Shop</a>
+</div>
+
 {% endblock page_content %}

@@ -1,9 +1,11 @@
-import stripe
+import stripe, os, random, string
+
+from flask import Flask, redirect
 from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from .models import Product, Category, Order, OrderItem
+from .models import Product, Category, Order, OrderItem, PromoCode
 
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
@@ -52,23 +54,115 @@ def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug)
     return render(request, 'store/product_detail.html', {'product': product})
 
-@login_required
+#@login_required
 def add_to_order(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    order, created = Order.objects.get_or_create(user=request.user, paid=False)
+    
+    # Use session to track guest cart
+    session_key = request.session.session_key
+    if not session_key:
+        request.session.create()
+        session_key = request.session.session_key
+
+    if request.user.is_authenticated:
+        order, created = Order.objects.get_or_create(user=request.user, paid=False)
+    else:
+        order, created = Order.objects.get_or_create(session_key=session_key, user=None, paid=False)
+
     item, created = OrderItem.objects.get_or_create(order=order, product=product)
-    item.quantity += 1
+    if not created:
+        item.quantity += 1
     item.save()
-    return JsonResponse({'message': 'Added to cart'})
+    return redirect('view_order')
 
-@login_required
+
 def view_order(request):
-    order = Order.objects.filter(user=request.user, paid=False).first()
-    return render(request, 'store/order.html', {'order': order})
+    if request.user.is_authenticated:
+        order = Order.objects.filter(user=request.user, paid=False).first()
+    else:
+        session_key = request.session.session_key
+        if not session_key:
+            request.session.create()
+            session_key = request.session.session_key
+        order = Order.objects.filter(session_key=session_key, user=None, paid=False).first()
 
-@login_required
+    total = 0
+    if order:
+        total = sum(item.quantity * item.product.price for item in order.orderitem_set.all())
+
+    return render(request, 'store/order.html', {'order': order, 'total': total})
+
+
+def update_quantity(request, item_id):
+    if request.user.is_authenticated:
+        item = get_object_or_404(
+            OrderItem,
+            id=item_id,
+            order__user=request.user,
+            order__paid=False
+        )
+    else:
+        session_key = request.session.session_key
+        if not session_key:
+            request.session.create()
+            session_key = request.session.session_key
+        item = get_object_or_404(
+            OrderItem,
+            id=item_id,
+            order__session_key=session_key,
+            order__user=None,
+            order__paid=False
+        )
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'increase':
+            item.quantity += 1
+        elif action == 'decrease':
+            item.quantity -= 1
+            if item.quantity < 1:
+                item.delete()
+                return redirect('view_order')
+        item.save()
+
+    return redirect('view_order')
+
+
+def remove_from_order(request, item_id):
+    if request.user.is_authenticated:
+        item = get_object_or_404(OrderItem, id=item_id, order__user=request.user, order__paid=False)
+    else:
+        session_key = request.session.session_key
+        if not session_key:
+            request.session.create()
+            session_key = request.session.session_key
+        item = get_object_or_404(OrderItem, id=item_id, order__session_key=session_key, order__user=None, order__paid=False)
+
+    item.delete()
+    return redirect('view_order')
+
+
+def get_order(request):
+    if request.user.is_authenticated:
+        order, created = Order.objects.get_or_create(user=request.user, paid=False)
+    else:
+        if not request.session.session_key:
+            request.session.create()
+        session_key = request.session.session_key
+        order, created = Order.objects.get_or_create(session_key=session_key, paid=False)
+    return order
+
+@csrf_exempt
 def create_checkout_session(request):
-    order = Order.objects.filter(user=request.user, paid=False).first()
+    if request.user.is_authenticated:
+        order = Order.objects.filter(user=request.user, paid=False).first()
+    else:
+        session_key = request.session.session_key
+        if not session_key:
+            request.session.create()
+            session_key = request.session.session_key
+        order = Order.objects.filter(session_key=session_key, user=None, paid=False).first()
+
     if not order:
         return JsonResponse({'error': 'No active order'}, status=400)
 
@@ -91,18 +185,54 @@ def create_checkout_session(request):
         payment_method_types=['card'],
         line_items=line_items,
         mode='payment',
-        success_url='http://localhost:8000/success/',
-        cancel_url='http://localhost:8000/cancel/',
+        success_url='http://localhost:8000/store/success/',
+        cancel_url='http://localhost:8000/store/cancel/',
+    )
+
+    return JsonResponse({'id': session.id})
+
+    order = get_order(request)
+    if not order:
+        return JsonResponse({'error': 'No active order'}, status=400)
+
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    line_items = []
+
+    for item in order.orderitem_set.all():
+        line_items.append({
+            'price_data': {
+                'currency': 'usd',
+                'product_data': {
+                    'name': item.product.name,
+                },
+                'unit_amount': int(item.product.price * 100),
+            },
+            'quantity': item.quantity,
+        })
+
+    session = stripe.checkout.Session.create(
+        payment_method_types=['card'],
+        line_items=line_items,
+        mode='payment',
+        success_url='http://localhost:8000/store/success/',
+        cancel_url='http://localhost:8000/store/cancel/',
     )
 
     return JsonResponse({'id': session.id})
 
 def success(request):
-    order = Order.objects.filter(user=request.user, paid=False).first()
+    if request.user.is_authenticated:
+        order = Order.objects.filter(user=request.user, paid=False).first()
+    else:
+        session_key = request.session.session_key
+        order = Order.objects.filter(session_key=session_key, user=None, paid=False).first()
+
     if order:
         order.paid = True
         order.save()
+
     return render(request, 'store/success.html')
+
 
 def cancel(request):
     return render(request, 'store/cancel.html')
@@ -115,3 +245,63 @@ def lottery(request):
 
 def warnings(request):
     return render(request, 'warnings.html')
+
+app = Flask(__name__)
+
+stripe.api_key = 'sk_test_o482215W7Ef1KfFUXLTXZ8kp'
+
+@app.route('/create-checkout-session/', methods=['POST'])
+def create_checkout_session(request):
+  session = stripe.checkout.Session.create(
+    line_items=[{
+      'price_data': {
+        'currency': 'usd',
+        'product_data': {
+          'name': 'T-shirt',
+        },
+        'unit_amount': 2000,
+      },
+      'quantity': 1,
+    }],
+    mode ='payment',
+    success_url ='http://127.0.0.1:8000/success',
+    cancel_url ='http://127.0.0.1:8000/cancel',
+  )
+
+  return redirect(session.url, code=303)
+
+if __name__== '__main__':
+    app.run(port=4242)
+    
+
+def lottery_view(request):
+    win_chance = 0.25  # 25% chance to win
+
+    # Use session to prevent repeat plays, optional
+    if request.session.get('played_lottery'):
+        return render(request, 'store/lottery_result.html', {
+            'win': False,
+            'code': None,
+            'played': True
+        })
+
+    win = True
+    code = None
+
+    if win:
+        # Generate unique 8-character code
+        while True:
+            code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+            if not PromoCode.objects.filter(code=code).exists():
+                break
+
+        PromoCode.objects.create(code=code, discount=100, used=False)
+
+    # Optional: block replay until browser session is cleared
+    request.session['played_lottery'] = True
+
+    return render(request, 'store/lottery_result.html', {
+        'win': win,
+        'code': code,
+        'played': True
+    })

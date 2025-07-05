@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+  <h2 class="text-center mt-4">🎟️ Lottery Result</h2>
+{% endblock %}
+
+{% block page_content %}
+<div class="container text-center my-5">
+  {% if played %}
+    <div class="alert alert-info">You've already played the lottery this session.</div>
+  {% endif %}
+
+  {% if win %}
+    <h3 class="text-success">🎉 You Win!</h3>
+    <p>Use this code at checkout to get a free item:</p>
+    <div class="display-5 fw-bold bg-light py-2 px-4 border rounded d-inline-block">
+      {{ code }}
+    </div>
+  {% else %}
+    <h3 class="text-danger">😢 Not a Winner This Time</h3>
+    <p>Better luck next time!</p>
+  {% endif %}
+
+  <a href="{% url 'product_menu' %}" class="btn btn-outline-primary mt-4">Back to Shop</a>
+</div>
+{% endblock %}

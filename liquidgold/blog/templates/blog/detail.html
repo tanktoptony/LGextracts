@@ -1,41 +1,67 @@
-<!--  blog/templates/blog/detail.html -->
-
 {% extends 'base.html' %}
+{% load widget_tweaks %}  <!-- Add this line -->
 
 {% block page_title %}
-    <h2>{{ post.title }}</h2>
+<div class="container my-4">
+  <h2 class="text-center">{{ post.title }}</h2>
+</div>
 {% endblock page_title %}
 
 {% block page_content %}
+<div class="container">
+  
+  <!-- Post Meta -->
+  <div class="text-muted mb-3 text-center">
     <small>
-        {{ post.created_on.date }} | Categories:
-        {% for category in post.categories.all %}
-            <a href="{% url 'blog_category' category.name %}">
-                {{ category.name }}
-            </a>
-        {% endfor %}
+      {{ post.created_on.date }} | Categories:
+      {% for category in post.categories.all %}
+        <a href="{% url 'blog_category' category.name %}" class="link-secondary">
+          {{ category.name }}
+        </a>{% if not forloop.last %}, {% endif %}
+      {% endfor %}
     </small>
-    <p>{{ post.body | linebreaks }}</p>
+  </div>
 
-    <h3>Leave a comment:</h3>
-    <form method="post">
-        {% csrf_token %}
-        <div>
-            {{ form.author }}
-        </div>
-        <div>
-            {{ form.body }}
-        </div>
+  <!-- Post Body -->
+  <div class="card mb-5 shadow-sm">
+    <div class="card-body" style="text-indent: 2em;">
+      <p class="card-text" style="text-indent: 2em;">{{ post.body|linebreaks }}</p>
+    </div>
+  </div>
+
+  <!-- Comment Form -->
+  <div class="mb-5">
+    <h4 class="mb-3">Leave a Comment</h4>
+    <form method="post" class="row g-3">
+      {% csrf_token %}
+      <div class="col-md-6">
+        {{ form.author.label_tag }}
+        {{ form.author|add_class:"form-control" }}
+      </div>
+      <div class="col-12">
+        {{ form.body.label_tag }}
+        {{ form.body|add_class:"form-control" }}
+      </div>
+      <div class="col-12">
         <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
     </form>
+  </div>
 
-    <h3>Comments:</h3>
+  <!-- Comments List -->
+  <div>
+    <h4 class="mb-3">Comments</h4>
     {% for comment in comments %}
-    <p>
-        On {{ comment.created_on.date }} <b>{{ comment.author }}</b> wrote:
-    </p>
-    <p>
-        {{ comment.body | linebreaks }}
-    </p>
+      <div class="border rounded p-3 mb-3 bg-light">
+        <p class="mb-1">
+          <small class="text-muted">On {{ comment.created_on.date }}, <strong>{{ comment.author }}</strong> wrote:</small>
+        </p>
+        <p class="mb-0">{{ comment.body|linebreaks }}</p>
+      </div>
+    {% empty %}
+      <p class="text-muted">No comments yet.</p>
     {% endfor %}
+  </div>
+
+</div>
 {% endblock page_content %}

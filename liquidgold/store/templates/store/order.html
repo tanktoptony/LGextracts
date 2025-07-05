@@ -1,29 +1,85 @@
-<!-- templates/store/order.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Your Order</title>
-    <script src="https://js.stripe.com/v3/"></script>
-</head>
-<body>
-    <h1>Your Cart</h1>
-    {% if order %}
-        <ul>
-        {% for item in order.orderitem_set.all %}
-            <li>{{ item.product.name }} — {{ item.quantity }} x ${{ item.product.price }}</li>
-        {% endfor %}
-        </ul>
-        <button id="checkout-button">Checkout</button>
-        <script>
-        const stripe = Stripe("{{ STRIPE_PUBLISHABLE_KEY }}");
-        document.getElementById("checkout-button").addEventListener("click", function () {
-            fetch("{% url 'create_checkout_session' %}")
-            .then(response => response.json())
-            .then(session => stripe.redirectToCheckout({ sessionId: session.id }));
-        });
-        </script>
-    {% else %}
-        <p>Your cart is empty.</p>
-    {% endif %}
-</body>
-</html>
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+
+{% block page_title %}
+  <h2 class="text-center mt-5">🛒 Your Cart</h2>
+{% endblock %}
+
+{% block page_content %}
+<div class="container my-5">
+  {% if order %}
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Subtotal</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in order.orderitem_set.all %}
+          <tr>
+            <td class="d-flex align-items-center gap-3">
+              {% if item.product.image %}
+                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}"
+                     style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+              {% endif %}
+              {{ item.product.name }}
+            </td>
+            <td>
+                <div class="d-flex align-items-center gap-2">
+                  <form action="{% url 'update_quantity' item.id %}" method="POST" style="margin:0;">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="decrease">
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">–</button>
+                  </form>
+              
+                  <span class="mx-2 fw-bold">{{ item.quantity }}</span>
+              
+                  <form action="{% url 'update_quantity' item.id %}" method="POST" style="margin:0;">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="increase">
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">+</button>
+                  </form>
+                </div>
+              </td>
+            
+            <td>${{ item.product.price }}</td>
+            <td>${{ item.quantity|multiply:item.product.price|floatformat:2 }}</td>
+            <td>
+            <a href="{% url 'remove_from_order' item.id %}" class="btn btn-sm btn-danger">Remove</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+              <td colspan="3" class="text-end fw-bold">Total:</td>
+              <td class="fw-bold">${{ total|floatformat:2 }}</td>
+              <td></td>
+            </tr>
+          </tfoot>
+          
+      </table>
+    </div>
+
+    <form action="{% url 'create_checkout_session' %}" method="POST">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-success w-100 btn-lg">Checkout with Stripe</button>
+    </form>
+
+    <div class="text-center mt-4">
+      <a href="{% url 'product_menu' %}" class="btn btn-outline-secondary">← Continue Shopping</a>
+    </div>
+
+  {% else %}
+    <div class="alert alert-info text-center">
+      Your cart is empty. <a href="{% url 'product_menu' %}">Start shopping</a> 🛍️
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
