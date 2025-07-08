@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-#po%hjz5(8oz))1+j#&_8s=b76&2tp$$chzk=s7k@@lhjgaj+x'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['lgextracts.onrender.com', 'lgextracts.com', 'www.lgextracts.com']
 CSRF_TRUSTED_ORIGINS = ['https://lgextracts.onrender.com', 'https://lgextracts.com', 'https://www.lgextracts.com']
