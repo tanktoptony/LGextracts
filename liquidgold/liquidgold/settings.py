@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +26,9 @@ SECRET_KEY = 'django-insecure-#po%hjz5(8oz))1+j#&_8s=b76&2tp$$chzk=s7k@@lhjgaj+x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['lgextracts.com', 'www.lgextracts.com']
+CSRF_TRUSTED_ORIGINS = ['https://lgextracts.com', 'https://www.lgextracts.com']
+SECURE_SSL_REDIRECT = True  # Only if HTTPS is enabled
 
 
 # Application definition
@@ -132,6 +135,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
