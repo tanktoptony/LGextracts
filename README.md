@@ -5,7 +5,7 @@ Django==5.0.2
 idna==3.10
 packaging==23.2
 pefile==2023.2.7
-pillow==10.2.0
+pillow==9.5.0
 pyactiveresource==2.2.2
 pygame==2.6.1
 pygame-ce==2.5.2
