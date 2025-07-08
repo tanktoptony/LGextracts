@@ -246,6 +246,9 @@ def lottery(request):
 def warnings(request):
     return render(request, 'warnings.html')
 
+def about(request):
+    return render(request, 'about.html')
+
 app = Flask(__name__)
 
 stripe.api_key = 'sk_test_o482215W7Ef1KfFUXLTXZ8kp'

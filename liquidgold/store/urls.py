@@ -16,6 +16,7 @@ urlpatterns = [
     path('remove-from-order/<int:item_id>/', views.remove_from_order, name='remove_from_order'),
     path('update-quantity/<int:item_id>/', views.update_quantity, name='update_quantity'),
     path('accounts/logout/', LogoutView.as_view(), name='logout'),
+    path('about/', views.about, name='about'),
     ### path('spanish/', views.spanish, name='spanish'),
 ]
 
