@@ -4,3 +4,4 @@ stripe==8.4.0
 gunicorn
 django-widget-tweaks
 whitenoise
+Pillow
