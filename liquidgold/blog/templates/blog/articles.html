@@ -1,0 +1,43 @@
+<!-- blog/templates/blog/index.html -->
+{% extends 'base.html' %}
+{% load static %}
+{% block page_content %}
+
+<div class="container py-5">
+  <h2 class="text-center mb-4">Articles</h2>
+
+  <!-- Responsive Grid -->
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+    {% for post in posts %}
+    <div class="col">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">
+            <a href="{% url 'blog_detail' post.pk %}" class="text-decoration-none">
+              {{ post.title }}
+            </a>
+          </h5>
+          <small class="text-muted">
+            {{ post.created_on.date }}<br>
+            Categories:
+            {% for category in post.categories.all %}
+              <a href="{% url 'blog_category' category.name %}" class="text-decoration-none">
+                {{ category.name }}
+              </a>{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </small>
+          <p class="card-text mt-2">
+            {{ post.body|truncatewords:25 }}...
+          </p>
+        </div>
+        <div class="card-footer text-end">
+          <a href="{% url 'blog_detail' post.pk %}" class="btn btn-sm btn-outline-primary">Read More</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>\
+  
+
+{% endblock page_content %}
