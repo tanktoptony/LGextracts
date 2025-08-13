@@ -45,6 +45,8 @@ SECURE_SSL_REDIRECT = False  # Only if HTTPS is enabled
 
 INSTALLED_APPS = [
     'widget_tweaks',
+    'crispy_forms',
+    'crispy_bootstrap4',
     'store',
     'blog.apps.BlogConfig',
     'django.contrib.admin',
@@ -54,6 +56,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = ("bootstrap4",)
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -152,3 +157,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.yourprovider.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "no-reply@yourdomain.com"
+EMAIL_HOST_PASSWORD = "your-smtp-password"
+
+DEFAULT_FROM_EMAIL = "no-reply@yourdomain.com"
+ORDERS_EMAIL_TO = "orders@yourdomain.com"  # where forms send

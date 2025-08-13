@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block page_title %}
+  <h2 class="text-center mt-4">🧾 Order Form</h2>
+{% endblock page_title %}
+
+{% block page_content %}
+<div class="container my-5">
+  {% if submitted %}
+    <div class="alert alert-success">
+      Thanks! Your order request has been sent.
+    </div>
+    <a class="btn btn-outline-primary" href="{% url 'product_menu' %}">Back to Shop</a>
+  {% else %}
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+  {% endif %}
+</div>
+{% endblock page_content %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block page_title %}
+  <h2 class="text-center mt-4">🎁 Claim Your Prize</h2>
+{% endblock page_title %}
+
+{% block page_content %}
+<div class="container my-5">
+  {% if submitted %}
+    <div class="alert alert-success">
+      Thanks! Your information has been sent. We’ll be in touch soon.
+    </div>
+    <a class="btn btn-outline-primary" href="{% url 'product_menu' %}">Back to Shop</a>
+  {% else %}
+    <p>You won: <strong>{{ prize }}</strong></p>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form|crispy }}
+      <button type="submit" class="btn btn-primary">Send</button>
+      <a class="btn btn-link" href="{% url 'product_menu' %}">Cancel</a>
+    </form>
+  {% endif %}
+</div>
+{% endblock page_content %}
