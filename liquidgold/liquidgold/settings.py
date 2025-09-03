@@ -105,12 +105,28 @@ WSGI_APPLICATION = 'liquidgold.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+import os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+if os.environ.get("RENDER"):
+    # Production on Render with persistent disk
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.path.join("/opt/render/project/db", "db.sqlite3"),
+        }
     }
-}
+else:
+    # Local development
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+
 
 
 # Password validation
@@ -158,12 +174,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.yourprovider.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "no-reply@yourdomain.com"
-EMAIL_HOST_PASSWORD = "your-smtp-password"
+# settings.py
 
-DEFAULT_FROM_EMAIL = "no-reply@yourdomain.com"
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+#EMAIL_HOST = "smtp.gmail.com"
+#EMAIL_PORT = 587
+#EMAIL_USE_TLS = True
+#EMAIL_HOST_USER = "lgextracts@gmail.com"   # your Gmail
+#EMAIL_HOST_PASSWORD = "LGExtracts321"  # NOT your Gmail password, but an App Password
+DEFAULT_FROM_EMAIL = "lgextracts@gmail.com"
 ORDERS_EMAIL_TO = "orders@yourdomain.com"  # where forms send

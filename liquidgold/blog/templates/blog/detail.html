@@ -50,18 +50,23 @@
 
   <!-- Comments List -->
   <div>
-    <h4 class="mb-3">Comments</h4>
-    {% for comment in comments %}
-      <div class="border rounded p-3 mb-3 bg-light">
-        <p class="mb-1">
-          <small class="text-muted">On {{ comment.created_on.date }}, <strong>{{ comment.author }}</strong> wrote:</small>
-        </p>
-        <p class="mb-0">{{ comment.body|linebreaks }}</p>
+    <h3 class="mb-4">Comments</h3>
+
+<div class="comments-list">
+  {% for comment in comments %}
+    <div class="comment">
+      <div class="comment-header">
+        <strong>{{ comment.author }}</strong>
+        <span class="comment-date">{{ comment.created_on|date:"M d, Y H:i" }}</span>
       </div>
-    {% empty %}
-      <p class="text-muted">No comments yet.</p>
-    {% endfor %}
-  </div>
+      <div class="comment-body">
+        {{ comment.body }}
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-muted">No comments yet. Be the first!</p>
+  {% endfor %}
+</div>
 
 </div>
 {% endblock page_content %}

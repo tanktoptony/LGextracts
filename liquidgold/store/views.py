@@ -7,13 +7,15 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .models import Product, Category, Order, OrderItem, PromoCode
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 
 # store/views.py (or accounts/views.py)
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
+
+from django.core.mail import send_mail
 
 def register(request):
     if request.method == 'POST':
@@ -240,7 +242,57 @@ def cancel(request):
 def spanish(request):
     return render(request, 'spanish.html')
 
+from django.core.mail import send_mail
+from django.conf import settings
+from django.shortcuts import render
+
+def promo_claim(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        prize = request.POST.get("prize")
+
+        subject = "New Prize Claim"
+        message = f"""
+        A new prize claim has been submitted:
+
+        Name: {name}
+        Email: {email}
+        Prize: {prize}
+        """
+
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ["lgextracts@gmail.com"])
+
+        return render(request, "store/promo_claim.html", {
+            "success": True,
+            "name": name,
+            "prize": prize
+        })
+
+    # GET request — show form
+    prize = request.GET.get("prize", "")
+    return render(request, "store/promo_claim.html", {"prize": prize})
+
 def lottery(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        prize = request.POST.get("prize")
+
+        # Build email message
+        subject = "New Lottery Entry"
+        message = f"""
+        A new lottery form was submitted:
+
+        Name: {name}
+        Email: {email}
+        Prize: {prize}
+        """
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ["lgextracts@gmail.com"])
+
+        return render(request, "store/lottery_result.html", {"success": True})
+
+    return render(request, "store/lottery.html")
     return render(request, 'lottery.html')
 
 def warnings(request):
@@ -308,3 +360,14 @@ def lottery_view(request):
         'code': code,
         'played': True
     })
+
+# Lottery Spin Page
+def promo_wheel(request):
+    request.session.setdefault("last_spin", None)
+    return render(request, "lottery.html")
+
+# Prize Claim Page (sends email)
+def promo_claim(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get

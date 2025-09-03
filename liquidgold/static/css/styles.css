@@ -1,9 +1,170 @@
+
+/* ===========================
+   Base
+=========================== */
 body {
-    font-family: Arial, sans-serif;
-    margin: 2%;
-    padding: 0;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #0e0e0e; /* dark background */
+  color: #f5f5f5;            /* light text */
+  line-height: 1.6;
 }
 
-.store {
-
+a {
+  color: #f5f5f5;
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
+
+a:hover {
+  color: #ffcc33; /* gold accent hover */
+}
+
+/* ===========================
+   Header / Navigation
+=========================== */
+.site-header {
+  background: #111; /* dark nav */
+  border-bottom: 1px solid #222;
+}
+
+.site-header .brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffcc33; /* gold brand */
+}
+
+.nav-links a {
+  color: #f5f5f5;
+  margin-left: 1rem;
+  font-weight: 500;
+}
+
+.nav-links a:hover {
+  color: #ffcc33;
+}
+
+/* ===========================
+   Buttons
+=========================== */
+.btn-primary {
+  background-color: #ffcc33;
+  color: #111;
+  border: none;
+  border-radius: 50px;
+  padding: 0.5rem 1.25rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #e6b800;
+  color: #000;
+}
+
+/* ===========================
+   Hero Section
+=========================== */
+.hero {
+  position: relative;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #111;
+  color: #fff;
+}
+
+.hero h1,
+.hero p {
+  color: #fff;
+}
+
+/* Overlay if you use hero background images */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 1;
+}
+
+.hero > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* ===========================
+   Cards
+=========================== */
+.card {
+  background-color: #1a1a1a;
+  border: 1px solid #222;
+  border-radius: 12px;
+  color: #f5f5f5;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card img {
+  border-bottom: 1px solid #222;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+}
+
+.card-body {
+  padding: 1.25rem;
+}
+
+.card-title {
+  color: #ffcc33;
+}
+
+/* Footer cleanup */
+footer {
+  background-color: #111 !important; /* force dark */
+  color: #aaa;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.9rem;
+  border-top: 1px solid #222;
+}
+
+/* Remove any white backgrounds inside footer */
+footer * {
+  background: transparent !important;
+}
+
+
+/* Blog comments */
+.comments-list {
+  margin-top: 2rem;
+}
+
+.comment {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  color: #f0f0f0;
+}
+
+.comment-header {
+  font-size: 0.9rem;
+  color: #ffcc33; /* gold accent for author/date */
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.comment-body {
+  font-size: 1rem;
+  color: #e5e5e5;
+  line-height: 1.5;
+}
+

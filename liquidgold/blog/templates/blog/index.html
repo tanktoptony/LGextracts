@@ -3,16 +3,21 @@
 {% load static %}
 {% block page_content %}
 
-<div class="container-fluid p-0">
-    <!-- Splash Image -->
-    <div class="position-relative">
-      <img src="{% static 'images/1000015952.png' %}" class="img-fluid w-100" alt="Blog Banner" style="max-height: 400px; object-fit: cover;">
-      <div class="position-absolute top-50 start-50 translate-middle text-white text-center">
-        <!--<h1 class="display-4 fw-bold">Our Blog</h1>
-        <p class="lead">Insights, news, and stories worth reading</p>-->
-      </div>
-    </div>
+<!-- Hero Section -->
+<section class="hero d-flex align-items-center justify-content-center text-center text-white"
+         style="background: url('{% static "images/1000015952.png" %}') center/cover no-repeat; height: 100vh; position: relative;">
+
+  <!-- Overlay -->
+  <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.55);"></div>
+
+  <!-- Content -->
+  <div class="position-relative z-2">
+    <h1 class="display-2 fw-bold mb-3">Premium Extracts</h1>
+    <p class="lead mb-4">Crafted for Excellence</p>
+    <a href="{% url 'product_menu' %}" class="btn btn-primary btn-lg px-4 rounded-pill">Shop Now</a>
   </div>
+</section>
+
 
 
 

@@ -9,6 +9,6 @@ urlpatterns = [
     path('subscribe/', views.subscribe, name='subscribe'),
     path("promo/wheel/", views.promo_wheel, name="promo_wheel"),
     path("promo/claim/", views.promo_claim, name="promo_claim"),
-    path("promo/wheel-qr.png", views.promo_wheel_qr, name="promo_wheel_qr"),
-    path("shop/order-form/", views.order_form, name="order_form"),
+    #path("promo/wheel-qr.png", views.promo_wheel_qr, name="promo_wheel_qr"),
+    #path("shop/order-form/", views.order_form, name="order_form"),
 ]
