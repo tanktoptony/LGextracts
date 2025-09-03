@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-#po%hjz5(8oz))1+j#&_8s=b76&2tp$$chzk=s7k@@lhjgaj+x'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'lgextracts.onrender.com', 
@@ -177,10 +177,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # settings.py
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-#EMAIL_HOST = "smtp.gmail.com"
-#EMAIL_PORT = 587
-#EMAIL_USE_TLS = True
-#EMAIL_HOST_USER = "lgextracts@gmail.com"   # your Gmail
-#EMAIL_HOST_PASSWORD = "LGExtracts321"  # NOT your Gmail password, but an App Password
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "lgextracts@gmail.com"   # your Gmail
+EMAIL_HOST_PASSWORD = "LGExtracts321"  # NOT your Gmail password, but an App Password
 DEFAULT_FROM_EMAIL = "lgextracts@gmail.com"
 ORDERS_EMAIL_TO = "orders@yourdomain.com"  # where forms send
